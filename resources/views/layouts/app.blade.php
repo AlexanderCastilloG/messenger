@@ -22,10 +22,13 @@
 <body>
     <div id="app">
 
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+
         <b-navbar toggleable="sm" type="dark" variant="primary">
             
             <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-        
             <b-navbar-brand href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</b-navbar-brand>
         
             <b-collapse id="nav-text-collapse" is-nav>
@@ -37,20 +40,10 @@
                                 <b-nav-item href="{{ route('register') }}">Registro</b-nav-item>
                             @endif
                         @else
-                            <b-nav-item-dropdown text="Username" right>
-                                <b-dropdown-item href="#">Cerrar sesión</b-dropdown-item>
-{{-- 
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                        </div> --}}
+                            <b-nav-item-dropdown text="{{ auth()->user()->name }}" right>
+                                <b-dropdown-item href="#" @click="logout">
+                                    Cerrar sesión
+                                </b-dropdown-item>
                             </b-nav-item-dropdown>
                         @endguest
                 </b-navbar-nav>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html class="h-100">
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -19,13 +19,12 @@
     <!-- Styles -->
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 </head>
-<body>
-    <div id="app">
+<body class="h-100">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
-
+    <div id="app" class="h-100">
         <b-navbar toggleable="sm" type="dark" variant="primary">
             
             <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
@@ -50,9 +49,9 @@
             </b-collapse>
         </b-navbar>
 
-        <main class="py-4">
+        {{-- <main class="py-4"> --}}
             @yield('content')
-        </main>
+        {{-- </main> --}}
     </div>
 </body>
 </html>

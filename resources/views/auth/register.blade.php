@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<b-container class="container">
+<b-container class="container mt-2">
     <b-row align-h="center">
         <b-col md="8" offset-md="2">
             

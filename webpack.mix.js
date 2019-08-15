@@ -13,6 +13,12 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js');
 
+// Para desactivar las notificaciones de webpack
+// mix.js('resources/js/app.js', 'public/js').disableNotifications();
+
+// Para desactivar las notificaciones exitosa de webpack
+mix.disableSuccessNotifications();
+
 // mix.webpackConfig({
 //     module: {
 //         rules: [{
@@ -20,4 +26,5 @@ mix.js('resources/js/app.js', 'public/js');
 //             use: ['style-loader', 'css-loader']
 //         }]
 //     }
+// }); }
 // });

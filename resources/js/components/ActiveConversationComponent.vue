@@ -1,18 +1,20 @@
 <template>
     <b-row class="h-100">
         <b-col cols="8">
-             <b-card
+             <b-card no-body
                     footer-bg-variant="light"
                     footer-border-variant="dark"
                     title="Conversación activa"
                     class="h-100">
 
-                    <message-conversation-component 
-                            v-for="message in messages" 
-                            :key="message.id"
-                            :written-by-me="message.written_by_me"> <!-- directiva v-bind o : -->
-                        {{ message.content }}
-                    </message-conversation-component>
+                    <b-card-body class="card-body-scroll">
+                        <message-conversation-component 
+                                v-for="message in messages" 
+                                :key="message.id"
+                                :written-by-me="message.written_by_me"> <!-- directiva v-bind o : -->
+                            {{ message.content }}
+                        </message-conversation-component>
+                    </b-card-body>
 
                     <div slot="footer">
                         <b-form class="mb-0" @submit.prevent="postMessage">
@@ -35,7 +37,7 @@
         <b-col cols="4">
             <b-img  blank blank-color="#777" width="60" height="60" class="m-1" 
             rounded="circle" alt="Circle image"></b-img>
-            <p>Usuario seleccionado</p>
+            <p>{{ contactName }}</p>
             <hr>
             <b-form-checkbox>
                 Desactivar notificaciones
@@ -44,40 +46,69 @@
     </b-row>
 </template>
 
+<style>
+    .card-body-scroll {
+        max-height: calc(100vh - 63px);
+        overflow-y: auto;
+    }    
+</style>
+
 <script>
 export default {
+    props: {
+        contactId: Number,
+        contactName: String,
+        messages: Array
+    },
+
     data() {
         return {
-            messages: [],
-            newMessage: '',
-            contactId: 2
+            newMessage: ''
         }
     },
     mounted() {
-       this.getMessages();
     },
     methods: {
-        getMessages() {
-            axios.get(`/api/messages?contact_id=${this.contactId}`).then( (response)=> {
-                this.messages = response.data;
-                console.log(response.data);
-            });
-        },
-
         postMessage() {
             const params = {
                 to_id : this.contactId,
                 content: this.newMessage
             };
 
-            axios.post('/api/messages', params ).then((response) => {
-                console.log(response);
-                if(response.data.success) {
-                    this.newMessage = '';
-                    this.getMessages();
-                }
-            });
+            axios.post('/api/messages', params )
+                 .then((response) => {
+                    if(response.data.success) {
+                        this.newMessage = '';
+                        const message = response.data.message;
+                        message.written_by_me = true;
+                        this.$emit('messageCreated', message);
+                    }
+                });
+        },
+
+        scrollToBottom() {
+            const el = document.querySelector('.card-body-scroll');
+            el.scrollTop = el.scrollHeight;
         }
     },
+    updated() {
+        this.scrollToBottom();
+    },
+    // watch: {
+    //     messages() {
+    //         setTimeout(() => {
+    //             this.scrollToBottom();
+    //         }, 100);
+    //         console.log('mesanje')
+    //     }
+    // },
+    // para observar cambios de una propiedad
+    // watch: {
+    //     // es el mismo nombre de tu propiedad (props)
+    //     contactId(value){
+    //         // console.log(`contactId => ${this.contactId}`);
+    //         this.getMessages();
+    //     }
+    // },
 }
 </script>

@@ -16,5 +16,7 @@ class ConversationController extends Controller
                 'listen_notifications',
                 'last_message', 'last_time'
             ]); //para selecionar los campos que solo queremos
+        // contact_name
+        // contact_image
     }
 }

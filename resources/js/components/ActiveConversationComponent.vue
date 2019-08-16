@@ -11,6 +11,7 @@
                         <message-conversation-component 
                                 v-for="message in messages" 
                                 :key="message.id"
+                                :image="message.written_by_me ? myImage   : contactImage "
                                 :written-by-me="message.written_by_me"> <!-- directiva v-bind o : -->
                             {{ message.content }}
                         </message-conversation-component>
@@ -35,7 +36,7 @@
         </b-col>
 
         <b-col cols="4">
-            <b-img  blank blank-color="#777" width="60" height="60" class="m-1" 
+            <b-img  :src="contactImage" width="60" height="60" class="m-1" 
             rounded="circle" alt="Circle image"></b-img>
             <p>{{ contactName }}</p>
             <hr>
@@ -58,6 +59,8 @@ export default {
     props: {
         contactId: Number,
         contactName: String,
+        contactImage: String,
+        myImage: String,
         messages: Array
     },
 
@@ -67,6 +70,9 @@ export default {
         }
     },
     mounted() {
+        // eventBus.$on('example', function(data) {
+        //     console.log('Ocurrió el evento example', data);
+        // });
     },
     methods: {
         postMessage() {

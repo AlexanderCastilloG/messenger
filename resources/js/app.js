@@ -7,6 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.eventBus = new Vue();
 
 
 import BootstrapVue from 'bootstrap-vue';
@@ -23,6 +24,8 @@ Vue.use(BootstrapVue);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+Vue.component('profile-component', require('./components/ProfileFormComponent.vue').default);
+
 Vue.component('messenger-component', require('./components/MessengerComponent.vue').default);
 
 Vue.component('message-conversation-component', require('./components/MessageConversationComponent.vue').default);
@@ -30,6 +33,9 @@ Vue.component('contact-component', require('./components/ContactComponent.vue').
 
 Vue.component('contact-list-component', require('./components/ContactListComponent.vue').default);
 Vue.component('active-conversation-component', require('./components/ActiveConversationComponent.vue').default);
+
+Vue.component('status-component', require('./components/StatusComponent.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

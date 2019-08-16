@@ -11,7 +11,11 @@ class Conversation extends Model
      * en el modelo. Tenga en cuenta que los nombres de los atributos se mencionan normalmente en 
      * "caso de serpiente", aunque el descriptor de acceso se define usando "caso de camello":
      */
-    protected $appends = ['contact_name'];
+    protected $appends = ['contact_name', 'contact_image'];
+
+    public function getContactImageAttribute() {
+        return '/users/' . $this->contact()->first(['image'])->image;
+    }
 
     /**
      * Anexar valores a JSON
@@ -23,6 +27,7 @@ class Conversation extends Model
         // return $this->contact->name;
         return $this->contact()->first(['name'])->name;
     }
+
 
     public function contact() {
         // Conversation N  1 User (contact)

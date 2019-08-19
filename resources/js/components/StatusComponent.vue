@@ -11,12 +11,6 @@
 export default {
     props: {
         online: Boolean
-    },
-
-    data() {
-        return {
-            
-        }
-    },
+    }
 }
 </script>

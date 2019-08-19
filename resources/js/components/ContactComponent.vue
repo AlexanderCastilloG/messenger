@@ -21,17 +21,9 @@
 
 <script>
     export default {
-        // propiedades que vienen del exterior
         props: {
             conversation: Object,
             selected: Boolean
-        },
-        data() {
-            return {
-            }
-        },
-        mounted() {
-            // console.log('Component mounted.')
         },
 
         computed: {

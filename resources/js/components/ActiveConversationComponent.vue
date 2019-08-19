@@ -4,14 +4,13 @@
              <b-card no-body
                     footer-bg-variant="light"
                     footer-border-variant="dark"
-                    title="Conversación activa"
                     class="h-100">
 
                     <b-card-body class="card-body-scroll">
                         <message-conversation-component 
                                 v-for="message in messages" 
                                 :key="message.id"
-                                :image="message.written_by_me ? myImage   : contactImage "
+                                :image="message.written_by_me ? myImage   : selectedConversation.contact_image "
                                 :written-by-me="message.written_by_me"> <!-- directiva v-bind o : -->
                             {{ message.content }}
                         </message-conversation-component>
@@ -36,9 +35,9 @@
         </b-col>
 
         <b-col cols="4">
-            <b-img  :src="contactImage" width="60" height="60" class="m-1" 
+            <b-img  :src="selectedConversation.contact_image" width="60" height="60" class="m-1" 
             rounded="circle" alt="Circle image"></b-img>
-            <p>{{ contactName }}</p>
+            <p>{{ selectedConversation.contact_name }}</p>
             <hr>
             <b-form-checkbox>
                 Desactivar notificaciones
@@ -56,40 +55,15 @@
 
 <script>
 export default {
-    props: {
-        contactId: Number,
-        contactName: String,
-        contactImage: String,
-        myImage: String,
-        messages: Array
-    },
-
     data() {
         return {
             newMessage: ''
         }
     },
-    mounted() {
-        // eventBus.$on('example', function(data) {
-        //     console.log('Ocurrió el evento example', data);
-        // });
-    },
+
     methods: {
         postMessage() {
-            const params = {
-                to_id : this.contactId,
-                content: this.newMessage
-            };
-
-            axios.post('/api/messages', params )
-                 .then((response) => {
-                    if(response.data.success) {
-                        this.newMessage = '';
-                        const message = response.data.message;
-                        message.written_by_me = true;
-                        this.$emit('messageCreated', message);
-                    }
-                });
+            this.$store.dispatch('postMessage', this.newMessage);
         },
 
         scrollToBottom() {
@@ -97,24 +71,24 @@ export default {
             el.scrollTop = el.scrollHeight;
         }
     },
+    
     updated() {
         this.scrollToBottom();
     },
-    // watch: {
-    //     messages() {
-    //         setTimeout(() => {
-    //             this.scrollToBottom();
-    //         }, 100);
-    //         console.log('mesanje')
-    //     }
-    // },
-    // para observar cambios de una propiedad
-    // watch: {
-    //     // es el mismo nombre de tu propiedad (props)
-    //     contactId(value){
-    //         // console.log(`contactId => ${this.contactId}`);
-    //         this.getMessages();
-    //     }
-    // },
+
+    computed: {
+        myImage() {
+            return `/users/${this.$store.state.user.image}`;
+        },
+
+        selectedConversation() {
+            return this.$store.state.selectedConversation;
+        },
+
+        messages() {
+            return this.$store.state.messages;
+        }
+    }
+
 }
 </script>

@@ -27,16 +27,26 @@ export default {
 
     mounted() {
         this.$store.commit('setUser', this.user); // mutation
-        this.$store.dispatch('getConversations'); //action
+        
+        // action
+        this.$store.dispatch('getConversations')
+            .then( () => {
+                const conversationId = this.$route.params.conversationId;
+                if (conversationId) {
+                    const conversation = this.$store.getters.getConversationById(conversationId);
+                    if(conversation !== undefined){
+                        this.$store.dispatch('getMessages', conversation);
+                    }
+                }
+            });
+        
 
         // Escuchar si te envia un mensaje
         Echo.private(`users.${this.user.id}`)
         .listen('MessageSent', (data) => {
             const message = data.message;
             message.written_by_me = false;
-
-            // this.addMessage(message);
-            this.$store.commit('addMessage', message);
+            this.addMessage(message);
         });
 
 
@@ -69,6 +79,10 @@ export default {
                 // this.conversations[index].online = true;
                 this.$set(this.$store.state.conversations[index], 'online', status);
             }
+        },
+
+        addMessage(message) {
+            this.$store.commit('addMessage', message);
         }
     },
 

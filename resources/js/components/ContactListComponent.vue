@@ -15,8 +15,12 @@ export default {
 
     methods: {
         selectConversation(conversation) {
-             // dispatch es para llamar un action
-            this.$store.dispatch('getMessages', conversation);
+            // dispatch es para llamar un action
+            this.$store.dispatch('getMessages', conversation)
+                .then( ()=> {
+                    this.$router.push(`/chat/${conversation.id}`);
+                });
+            
         },
 
         isSelected(conversation) {

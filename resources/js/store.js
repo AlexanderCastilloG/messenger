@@ -55,7 +55,7 @@ export default new Vuex.Store({
 
     actions: {
         getMessages(context, conversation) {
-            axios.get(`/api/messages?contact_id=${conversation.contact_id}`)
+            return axios.get(`/api/messages?contact_id=${conversation.contact_id}`)
                 .then((response) => {
                     context.commit('selectedConversation', conversation);
                     context.commit('newMessagesList', response.data);
@@ -63,7 +63,8 @@ export default new Vuex.Store({
         },
 
         getConversations(context) {
-            axios.get('/api/conversations').then((response) => {
+            // trabaja de forma asincrona
+            return axios.get('/api/conversations').then((response) => {
                 context.commit('newConversationsList', response.data);
             });
         },
@@ -74,10 +75,9 @@ export default new Vuex.Store({
                 content: newMessage
             };
 
-            axios.post('/api/messages', params)
+            return axios.post('/api/messages', params)
                 .then((response) => {
                     if (response.data.success) {
-                        newMessage = '';
                         const message = response.data.message;
                         message.written_by_me = true;
                         context.commit('addMessage', message);
@@ -93,5 +93,13 @@ export default new Vuex.Store({
                 return conversation.contact_name.toLowerCase().includes(state.querySearch.toLowerCase());
             });
         },
+
+        // devolvemos una función en un getter cuando queremos utilizar parámetros
+        getConversationById(state) {
+            return function(conversationId) {
+                return state.conversations.find(conversation => conversation.id == conversationId);
+            };
+        }
+
     }
 });
